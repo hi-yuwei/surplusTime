@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="txt"></div>
+    <script>
+        /*显示倒计时，并且每个20秒往localStorage里做下标记，表明下次还可以观看的时间*/
+        if (localStorage.getItem('watchTime') == null || localStorage.getItem('watchTime') != 0) {
+
+            //10*60为总时间，600秒=10分钟
+            var totalTime = localStorage.getItem('watchTime')==null?10*60:Number(localStorage.getItem('watchTime')),
+                sum = 0; //记录每20秒设置localStorage
+
+            function countDown(totalTime) {
+                //计算倒计时
+                if (totalTime < 0) {
+                    return false;
+                    //倒计时结束，10分钟用完
+                };
+
+                var minute = parseInt(totalTime / 60),  //取分
+                    second = parseInt(totalTime % 60);  //取秒
+
+                minute = minute < 10 ? '0' + minute : minute;
+                second = second < 10 ? '0' + second : second;
+
+                document.getElementById('txt').innerText = minute + '分' + second + '秒';
+            }
+
+            setInterval(function () {
+                countDown(--totalTime);
+                ++sum;
+                if (sum === 20 && totalTime >= 0) {
+                    //每20秒并且10分钟没有用完时才设置
+                    sum = 0;
+                    localStorage.setItem('watchTime', totalTime);
+                }
+            }, 1000)
+        }
+    </script>
+</body>
+
+</html>
